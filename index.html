@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE FITNESS | パーソナルジム</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --black: #0a0a0a;
+  --white: #f5f5f0;
+  --accent: #e8ff2e;
+  --accent-dark: #c4d926;
+  --gray: #888;
+  --dark-surface: #141414;
+  --card-bg: #1a1a1a;
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== UTILITY ===== */
+.container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+.section-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(0.75rem, 1vw, 0.875rem);
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-weight: 900;
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.3;
+  margin-bottom: 20px;
+}
+
+/* ===== FADE-IN ANIMATION ===== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== HEADER ===== */
+header {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+  padding: 18px 0;
+  background: rgba(10,10,10,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(245,245,240,0.06);
+}
+header .container {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.08em;
+  color: var(--white);
+  text-decoration: none;
+}
+.logo span { color: var(--accent); }
+nav { display: flex; gap: 28px; align-items: center; }
+nav a {
+  color: var(--gray);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: color 0.3s;
+}
+nav a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--accent);
+  color: var(--black) !important;
+  padding: 8px 20px;
+  font-weight: 700;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.nav-cta:hover { background: var(--accent-dark); }
+
+/* ===== HERO ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-top: 80px;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -20%; right: -10%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,255,46,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero-eyebrow {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.35em;
+  color: var(--accent);
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 40px; height: 1px;
+  background: var(--accent);
+}
+.hero h1 {
+  font-weight: 900;
+  font-size: clamp(2.8rem, 7vw, 4.8rem);
+  line-height: 1.08;
+  margin-bottom: 24px;
+  letter-spacing: -0.02em;
+}
+.hero h1 .accent { color: var(--accent); }
+.hero-sub {
+  font-size: 1rem;
+  color: var(--gray);
+  line-height: 1.8;
+  max-width: 480px;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+.hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent);
+  color: var(--black);
+  padding: 16px 36px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  transition: all 0.3s;
+  border: none; cursor: pointer;
+}
+.btn-primary:hover { background: var(--accent-dark); transform: translateY(-2px); }
+.btn-primary svg { width: 16px; height: 16px; }
+.btn-outline {
+  display: inline-flex; align-items: center;
+  border: 1px solid rgba(245,245,240,0.2);
+  color: var(--white);
+  padding: 16px 36px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+.hero-stats {
+  display: flex; gap: 48px; margin-top: 64px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(245,245,240,0.08);
+}
+.hero-stat-number {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  color: var(--accent);
+  line-height: 1;
+}
+.hero-stat-label {
+  font-size: 0.75rem;
+  color: var(--gray);
+  margin-top: 4px;
+  letter-spacing: 0.04em;
+}
+
+/* ===== FEATURES ===== */
+.features { padding: 120px 0; }
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.feature-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(245,245,240,0.05);
+  padding: 40px 32px;
+  transition: all 0.4s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0; height: 2px;
+  background: var(--accent);
+  transition: width 0.4s;
+}
+.feature-card:hover::after { width: 100%; }
+.feature-card:hover { border-color: rgba(232,255,46,0.15); transform: translateY(-4px); }
+.feature-icon {
+  width: 48px; height: 48px;
+  background: rgba(232,255,46,0.08);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  font-size: 1.3rem;
+}
+.feature-card h3 {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+.feature-card p {
+  font-size: 0.85rem;
+  color: var(--gray);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ===== PRICING ===== */
+.pricing { padding: 120px 0; background: var(--dark-surface); }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.price-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(245,245,240,0.05);
+  padding: 40px 32px;
+  position: relative;
+  transition: all 0.4s;
+}
+.price-card:hover { transform: translateY(-4px); }
+.price-card.popular {
+  border-color: var(--accent);
+  background: linear-gradient(180deg, rgba(232,255,46,0.04) 0%, var(--card-bg) 50%);
+}
+.price-badge {
+  position: absolute;
+  top: -1px; right: 24px;
+  background: var(--accent);
+  color: var(--black);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  letter-spacing: 0.06em;
+}
+.price-plan {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--gray);
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.price-amount {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.2rem;
+  margin: 16px 0 4px;
+  line-height: 1;
+}
+.price-amount span { font-size: 1rem; color: var(--gray); margin-left: 4px; }
+.price-note { font-size: 0.75rem; color: var(--gray); margin-bottom: 28px; }
+.price-features { list-style: none; margin-bottom: 32px; }
+.price-features li {
+  font-size: 0.85rem;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(245,245,240,0.05);
+  display: flex; align-items: center; gap: 10px;
+  color: rgba(245,245,240,0.8);
+}
+.price-features li::before {
+  content: '✓';
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.price-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 14px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-decoration: none;
+  border: 1px solid rgba(245,245,240,0.15);
+  color: var(--white);
+  background: transparent;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.price-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.price-card.popular .price-btn {
+  background: var(--accent);
+  color: var(--black);
+  border-color: var(--accent);
+}
+.price-card.popular .price-btn:hover {
+  background: var(--accent-dark);
+}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials { padding: 120px 0; }
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  margin-top: 48px;
+}
+.testimonial-card {
+  background: var(--card-bg);
+  border: 1px solid rgba(245,245,240,0.05);
+  padding: 36px;
+  transition: all 0.4s;
+}
+.testimonial-card:hover { border-color: rgba(232,255,46,0.15); }
+.testimonial-stars {
+  color: var(--accent);
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+.testimonial-text {
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: rgba(245,245,240,0.85);
+  margin-bottom: 24px;
+  font-weight: 300;
+}
+.testimonial-author {
+  display: flex; align-items: center; gap: 14px;
+}
+.testimonial-avatar {
+  width: 44px; height: 44px;
+  background: rgba(232,255,46,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+.testimonial-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+.testimonial-meta {
+  font-size: 0.75rem;
+  color: var(--gray);
+  margin-top: 2px;
+}
+
+/* ===== CTA ===== */
+.cta {
+  padding: 120px 0;
+  background: var(--dark-surface);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(232,255,46,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-content { position: relative; z-index: 2; }
+.cta h2 {
+  font-weight: 900;
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin-bottom: 16px;
+}
+.cta h2 .accent { color: var(--accent); }
+.cta p {
+  color: var(--gray);
+  font-size: 1rem;
+  max-width: 480px;
+  margin: 0 auto 40px;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  padding: 48px 0;
+  border-top: 1px solid rgba(245,245,240,0.06);
+}
+footer .container {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy {
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+.footer-links { display: flex; gap: 24px; }
+.footer-links a {
+  font-size: 0.75rem;
+  color: var(--gray);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-links a:hover { color: var(--accent); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  nav a:not(.nav-cta) { display: none; }
+  .hero-stats { gap: 32px; flex-wrap: wrap; }
+  .features-grid,
+  .pricing-grid { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  footer .container { flex-direction: column; gap: 16px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <a href="#" class="logo">FORGE<span>.</span></a>
+    <nav>
+      <a href="#features">特徴</a>
+      <a href="#pricing">料金</a>
+      <a href="#voices">お客様の声</a>
+      <a href="#cta" class="nav-cta">無料体験</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content fade-in">
+      <div class="hero-eyebrow">PERSONAL GYM</div>
+      <h1>
+        カラダを鍛える。<br>
+        <span class="accent">自分を変える。</span>
+      </h1>
+      <p class="hero-sub">
+        完全マンツーマン指導で、あなただけのトレーニングプランを。
+        初心者からアスリートまで、確かな結果をお届けします。
+      </p>
+      <div class="hero-buttons">
+        <a href="#cta" class="btn-primary">
+          無料カウンセリング予約
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#features" class="btn-outline">詳しく見る</a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-number">2,400+</div>
+          <div class="hero-stat-label">累計会員数</div>
+        </div>
+        <div>
+          <div class="hero-stat-number">96%</div>
+          <div class="hero-stat-label">目標達成率</div>
+        </div>
+        <div>
+          <div class="hero-stat-number">50+</div>
+          <div class="hero-stat-label">在籍トレーナー</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">WHY FORGE</div>
+      <div class="section-title">選ばれる3つの理由</div>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-in">
+        <div class="feature-icon">🎯</div>
+        <h3>完全オーダーメイド</h3>
+        <p>体質・目標・ライフスタイルに合わせた完全個別プログラム。AIによる身体分析と経験豊富なトレーナーの知見を融合。</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">🏋️</div>
+        <h3>プロフェッショナル指導</h3>
+        <p>全トレーナーが国際資格保有。大会出場経験者やリハビリ専門家など、多彩な専門性であなたをサポート。</p>
+      </div>
+      <div class="feature-card fade-in">
+        <div class="feature-icon">📊</div>
+        <h3>データドリブン管理</h3>
+        <p>体組成・食事・睡眠を専用アプリで一元管理。週次レポートで変化を数値で実感できます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">PRICING</div>
+      <div class="section-title">あなたに合ったプランを</div>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card fade-in">
+        <div class="price-plan">LIGHT</div>
+        <div class="price-amount">¥29,800<span>/月</span></div>
+        <div class="price-note">月4回 / 1回50分</div>
+        <ul class="price-features">
+          <li>パーソナルトレーニング</li>
+          <li>食事アドバイス</li>
+          <li>アプリでの進捗管理</li>
+        </ul>
+        <a href="#cta" class="price-btn">無料体験に申し込む</a>
+      </div>
+      <div class="price-card popular fade-in">
+        <div class="price-badge">POPULAR</div>
+        <div class="price-plan">STANDARD</div>
+        <div class="price-amount">¥49,800<span>/月</span></div>
+        <div class="price-note">月8回 / 1回50分</div>
+        <ul class="price-features">
+          <li>パーソナルトレーニング</li>
+          <li>食事プラン作成</li>
+          <li>週次レポート</li>
+          <li>LINEサポート</li>
+        </ul>
+        <a href="#cta" class="price-btn">無料体験に申し込む</a>
+      </div>
+      <div class="price-card fade-in">
+        <div class="price-plan">PREMIUM</div>
+        <div class="price-amount">¥79,800<span>/月</span></div>
+        <div class="price-note">月12回 / 1回80分</div>
+        <ul class="price-features">
+          <li>パーソナルトレーニング</li>
+          <li>完全食事管理</li>
+          <li>毎日のフィードバック</li>
+          <li>優先予約・ウェア貸出</li>
+        </ul>
+        <a href="#cta" class="price-btn">無料体験に申し込む</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="voices">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-label">VOICES</div>
+      <div class="section-title">お客様の声</div>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card fade-in">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">3ヶ月で体脂肪率が28%から19%に。食事指導が的確で、無理なく続けられました。トレーナーさんの励ましが毎回のモチベーションになっています。</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">YT</div>
+          <div>
+            <div class="testimonial-name">田中 優子さん</div>
+            <div class="testimonial-meta">30代女性 / 会社員</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card fade-in">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">デスクワークで慢性的な腰痛に悩んでいましたが、姿勢改善プログラムで劇的に改善。今では週末のランニングも楽しめるようになりました。</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">KS</div>
+          <div>
+            <div class="testimonial-name">佐藤 健太さん</div>
+            <div class="testimonial-meta">40代男性 / エンジニア</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="container">
+    <div class="cta-content fade-in">
+      <div class="section-label">TRIAL</div>
+      <h2>まずは<span class="accent">無料体験</span>から</h2>
+      <p>カウンセリング＋体験トレーニング（60分）が完全無料。入会の強引な勧誘は一切ありません。</p>
+      <a href="#" class="btn-primary">
+        無料体験を予約する
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-copy">© 2026 FORGE FITNESS. All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">特定商取引法</a>
+      <a href="#">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Intersection Observer for fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => {
+        entry.target.classList.add('visible');
+      }, i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
